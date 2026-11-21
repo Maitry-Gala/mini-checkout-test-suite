@@ -1,0 +1,24 @@
+{
+  "name": "mini-checkout-test-suite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maitry-Gala/mini-checkout-test-suite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Maitry-Gala/mini-checkout-test-suite/issues"
+  },
+  "homepage": "https://github.com/Maitry-Gala/mini-checkout-test-suite#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
+  }
+}
