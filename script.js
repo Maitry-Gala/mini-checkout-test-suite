@@ -27,6 +27,8 @@ const cart = {};
 
 // Becomes true once an order is placed, so a second submit is ignored.
 let placed = false;
+// Quantity each box held when the customer started editing it.
+const qtyOnFocus = {};
 
 // Draw the product list; each Add button carries its product id in data-add.
 getid('products').innerHTML = PRODUCTS.map((p) =>
@@ -115,6 +117,7 @@ document.addEventListener('click', (e) => {
 
     // A changed cart makes an old "cart is empty" message stale.
     getid('cart-error').textContent = '';
+    getid('qty-message').textContent = '';
     renderCart();
 
     // Put keyboard focus back on the fresh copy of the pressed button.
@@ -129,21 +132,52 @@ getid('cart-body').addEventListener('input', (e) => {
     // Ignore events that did not come from a quantity box.
     if (!e.target.matches('[data-id]')) return;
 
-    // Convert the text to a number once, here.
+    const id = e.target.dataset.id;
     const raw = e.target.value;
     const qty = Number(raw);
 
-    // Accept only whole numbers from 1 to MAX_QTY so the cart never holds a bad value.
-    if (raw !== '' && Number.isInteger(qty) && qty >= 1 && qty <= MAX_QTY) {
-        cart[e.target.dataset.id] = qty;
+    if (raw !== '' && Number.isInteger(qty) && qty > MAX_QTY) {
+        // Too large: snap to the maximum and tell the customer why.
+        cart[id] = MAX_QTY;
+        e.target.value = MAX_QTY;
+        getid('qty-message').textContent = `Maximum quantity is ${MAX_QTY} per item. Quantity set to ${MAX_QTY}.`;
+        updateTotal();
+    } else if (raw !== '' && Number.isInteger(qty) && qty >= 1) {
+        // Valid quantity: store it and clear any old message.
+        cart[id] = qty;
+        getid('qty-message').textContent = '';
         updateTotal();
     }
 });
 
-// When the box loses focus, snap an invalid value back to the last valid quantity.
+// When the box loses focus, an invalid value goes back to what it was before editing.
 getid('cart-body').addEventListener('change', (e) => {
     if (!e.target.matches('[data-id]')) return;
-    e.target.value = cart[e.target.dataset.id];
+
+    const id = e.target.dataset.id;
+    const qty = Number(e.target.value);
+    const valid = e.target.value !== '' && Number.isInteger(qty) && qty >= 1 && qty <= MAX_QTY;
+
+    // Undo any in-between keystroke the cart picked up while the customer was editing.
+    if (!valid && qtyOnFocus[id] !== undefined) {
+        cart[id] = qtyOnFocus[id];
+        updateTotal();
+    }
+    e.target.value = cart[id];
+});
+
+// Remember the committed quantity when a quantity box gets focus.
+getid('cart-body').addEventListener('focusin', (e) => {
+    if (e.target.matches('[data-id]')) {
+        qtyOnFocus[e.target.dataset.id] = cart[e.target.dataset.id];
+    }
+});
+
+// Clear the quantity message as soon as focus leaves a quantity box.
+getid('cart-body').addEventListener('focusout', (e) => {
+    if (e.target.matches('[data-id]')) {
+        getid('qty-message').textContent = '';
+    }
 });
 
 // Typing in the name field clears its error and its invalid styling.

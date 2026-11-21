@@ -156,14 +156,23 @@ test('TC9: + and - change quantity, and - at 1 removes the line', async ({ page 
     await expect(page.getByTestId('confirmation')).toBeHidden();
 });
 
-test('TC10: invalid typed quantities snap back and never change the total', async ({ page }) => {
+test('TC10: bad quantities fall back; too-large quantity snaps to 10 with a message', async ({ page }) => {
     await page.getByTestId('add-notebook').click();
     const qty = page.getByTestId('qty-notebook');
 
-    for (const bad of ['0', '1.5', '50', '']) {
+    // Invalid values go back to the last valid quantity.
+    for (const bad of ['0', '1.5', '-3', '']) {
         await qty.fill(bad);
         await qty.blur();
         await expect(qty).toHaveValue('1');
         await expect(page.getByTestId('order-total')).toHaveText('₹50');
     }
+
+    // Too large snaps to the maximum, shows a message, and the total follows.
+    await qty.fill('75');
+    await expect(qty).toHaveValue('10');
+    await expect(page.getByTestId('qty-message')).toHaveText(
+        'Maximum quantity is 10 per item. Quantity set to 10.'
+    );
+    await expect(page.getByTestId('order-total')).toHaveText('₹500');
 });
