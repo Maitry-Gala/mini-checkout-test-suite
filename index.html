@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <title>Mini Checkout</title>
+</head>
+<body>
+    <h1>Checkout Details</h1>
+
+    <div id="shop">
+        <section>
+            <h2>Products</h2>
+            <ul id="products"></ul>
+        </section>
+
+        <form id="checkout-form" novalidate>
+            <section>
+                <h2>Your cart</h2>
+                <p id="cart-empty" data-testid="cart-empty">Your cart is empty.</p>
+                <table id="cart-table" hidden>
+                    <thead>
+                        <tr><th>Item</th><th>Quantity</th><th>Line total</th><th></th></tr>
+                    </thead>
+                    <tbody id="cart-body"></tbody>
+                </table>
+                <p>Order total: <span id="order-total" data-testid="order-total">₹0.00</span></p>
+                <div id="cart-error" data-testid="cart-error" role="alert"></div>
+            </section>
+
+            <section>
+                <label for="name">Full name (required)</label>
+                <br>
+                <input type="text" id="name" name="name" autocomplete="name" maxlength="30" aria-required="true" aria-describedby="name-error">
+                <div id="name-error" data-testid="name-error" role="alert"></div>
+                <button type="submit" id="place-order">Place order</button>
+            </section>
+        </form>
+    </div>
+
+    <section id="confirmation" data-testid="confirmation" role="status" hidden>
+        <h2>Order confirmed</h2>
+        <p>Thank you, <span id="conf-name"></span>.</p>
+        <p>Reference: <strong id="conf-ref" data-testid="order-reference"></strong></p>
+        <ul id="conf-lines"></ul>
+        <p>Order total: <strong id="conf-total" data-testid="confirmation-total"></strong></p>
+    </section>
+</body>
+</html>
