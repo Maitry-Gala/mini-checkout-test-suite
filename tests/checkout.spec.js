@@ -122,3 +122,48 @@ for (const valid of ["Anne-Marie O'Brien", 'मैत्री गाला']) {
         await expect(page.getByTestId('confirmation')).toContainText(valid);
     });
 }
+
+test('TC8: Add stops at the maximum quantity of 10', async ({ page }) => {
+    for (let i = 0; i < 12; i++) await page.getByTestId('add-notebook').click();
+    await expect(page.getByTestId('qty-notebook')).toHaveValue('10');
+    await expect(page.getByTestId('order-total')).toHaveText('₹500');
+});
+
+test('TC9: + and - change quantity, and - at 1 removes the line', async ({ page }) => {
+    await page.getByTestId('add-notebook').click();
+
+    await page.getByTestId('increase-notebook').click();
+    await page.getByTestId('increase-notebook').click();
+    await expect(page.getByTestId('qty-notebook')).toHaveValue('3');
+    await expect(page.getByTestId('order-total')).toHaveText('₹150');
+
+    await page.getByTestId('decrease-notebook').click();
+    await expect(page.getByTestId('qty-notebook')).toHaveValue('2');
+    await expect(page.getByTestId('order-total')).toHaveText('₹100');
+
+    // Two more presses: 2 -> 1, then 1 -> line removed.
+    await page.getByTestId('decrease-notebook').click();
+    await page.getByTestId('decrease-notebook').click();
+    await expect(page.getByTestId('cart-row-notebook')).toHaveCount(0);
+    await expect(page.getByTestId('cart-empty')).toBeVisible();
+
+    // The cart must really be empty, not just look empty: checkout stays blocked.
+    await page.getByLabel('Full name (required)').fill('Maitry Gala');
+    await page.getByRole('button', { name: 'Place order' }).click();
+    await expect(page.getByTestId('cart-error')).toHaveText(
+        'Your cart is empty. Add at least one item to place an order.'
+    );
+    await expect(page.getByTestId('confirmation')).toBeHidden();
+});
+
+test('TC10: invalid typed quantities snap back and never change the total', async ({ page }) => {
+    await page.getByTestId('add-notebook').click();
+    const qty = page.getByTestId('qty-notebook');
+
+    for (const bad of ['0', '1.5', '50', '']) {
+        await qty.fill(bad);
+        await qty.blur();
+        await expect(qty).toHaveValue('1');
+        await expect(page.getByTestId('order-total')).toHaveText('₹50');
+    }
+});

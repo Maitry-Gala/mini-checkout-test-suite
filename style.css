@@ -1,0 +1,224 @@
+
+/* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f5f5;
+    color: #222;
+    line-height: 1.5;
+}
+
+/* Page heading */
+h1 {
+    background: #fff;
+    padding: 22px 30px;
+    font-size: 24px;
+    font-weight: 600;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Main checkout container */
+#shop {
+    max-width: 850px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* Checkout sections */
+#shop section {
+    background: #fff;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+}
+
+/* Section headings */
+h2 {
+    font-size: 19px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    color: #222;
+}
+
+/* Product list */
+#products {
+    list-style: none;
+}
+
+#products li {
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+}
+
+/* Cart empty message */
+#cart-empty {
+    color: #777;
+    font-size: 14px;
+}
+
+/* Cart table */
+#cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 14px;
+}
+
+#cart-table th {
+    text-align: left;
+    padding: 12px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    border-bottom: 1px solid #ddd;
+}
+
+#cart-table td {
+    padding: 13px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Order total */
+#order-total,
+#conf-total {
+    font-size: 17px;
+    font-weight: 600;
+    color: #111;
+}
+
+/* Name input */
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+    margin-bottom: 15px;
+}
+
+input:focus {
+    border-color: #222;
+}
+
+/* Buttons */
+button {
+    background: #222;
+    color: #fff;
+    border: 1px solid #222;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #444;
+}
+
+/* Error messages */
+#cart-error,
+#name-error {
+    color: #b42318;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Confirmation section */
+#confirmation {
+    max-width: 850px;
+    margin: 30px auto;
+    padding: 25px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+}
+
+#confirmation h2 {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+#confirmation p {
+    margin: 12px 0;
+}
+
+#confirmation ul {
+    padding-left: 20px;
+    margin: 15px 0;
+}
+
+/* IMPORTANT: Preserve HTML hidden attribute */
+[hidden] {
+    display: none !important;
+}
+
+/* Fix quantity controls */
+#cart-table td:nth-child(2) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+#cart-table td:nth-child(2) button {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+#cart-table td:nth-child(2) input {
+    width: 55px;
+    height: 38px;
+    padding: 8px;
+    margin: 0;
+    text-align: center;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+    h1 {
+        padding: 18px 20px;
+        font-size: 21px;
+    }
+
+    #shop,
+    #confirmation {
+        margin: 20px auto;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    #shop section,
+    #confirmation {
+        padding: 18px;
+    }
+
+    #cart-table th,
+    #cart-table td {
+        padding: 8px 5px;
+        font-size: 12px;
+    }
+}
+
+
+
