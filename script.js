@@ -162,6 +162,28 @@ function newReference() {
     return 'ORD-' + ref;
 }
 
+// Allowed name length, counted after trimming spaces.
+const NAME_MIN = 3;
+const NAME_MAX = 30;
+
+// Returns an error message, or an empty string when the name is acceptable.
+function validateName(name) {
+    // Blank name
+    if (!name) return 'Enter your name to place the order.';
+    if (name.length < NAME_MIN) return `Name must be at least ${NAME_MIN} characters.`;
+    if (name.length > NAME_MAX) return `Name must be at most ${NAME_MAX} characters.`;
+
+    // Must start with a letter; then letters, combining marks, spaces, . ' ’ and - only.
+    if (!/^\p{L}[\p{L}\p{M} .'’-]*$/u.test(name)) {
+        return 'Use letters only (spaces, . - and apostrophes are allowed).';
+    }
+
+    // Needs at least two actual letters, so "a.." or "A. ." do not pass.
+    if ((name.match(/\p{L}/gu) || []).length < 2) return 'Enter your real name.';
+
+    return '';
+}
+
 // Handle the Place order button (and the Enter key inside the form).
 getid('checkout-form').addEventListener('submit', (e) => {
     // Stop the browser from reloading the page.
@@ -171,23 +193,22 @@ getid('checkout-form').addEventListener('submit', (e) => {
     if (placed) return;
 
     // Trim so a name made only of spaces counts as blank.
-    const name = getid('name').value.trim();
+    const name = getid('name').value.trim().replace(/\s+/g, ' ');
     const hasItems = Object.keys(cart).length > 0;
+    const nameProblem = validateName(name)
 
     // Show a message for each problem; an empty string clears a message.
     getid('cart-error').textContent = hasItems
         ? ''
         : 'Your cart is empty. Add at least one item to place an order.';
-    getid('name-error').textContent = name
-        ? ''
-        : 'Enter your name to place the order.';
+    getid('name-error').textContent = nameProblem;
 
     // Mark the field invalid for assistive technology and styling.
-    if (!name) getid('name').setAttribute('aria-invalid', 'true');
+    if (nameProblem) getid('name').setAttribute('aria-invalid', 'true');
 
     // Block checkout; return before touching the cart or the name so both are preserved.
-    if (!hasItems || !name) {
-        if (!name) getid('name').focus();
+    if (!hasItems || nameProblem) {
+        if (nameProblem) getid('name').focus();
         return;
     }
 
