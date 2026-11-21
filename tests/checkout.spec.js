@@ -90,17 +90,17 @@ test('TC5: empty cart blocks checkout and keeps the typed name', async ({ page }
 
 // Invalid names: each case runs as its own test in a fresh page.
 const INVALID_NAMES = [
-    ['   ', 'Enter your name to place the order.'],
-    ['.', 'Name must be at least 3 characters.'],
-    ['Al', 'Name must be at least 3 characters.'],
-    ['123', 'Use letters only (spaces, . - and apostrophes are allowed).'],
-    ['A1b', 'Use letters only (spaces, . - and apostrophes are allowed).'],
-    ['...', 'Use letters only (spaces, . - and apostrophes are allowed).'],
-    ['a..', 'Enter your real name.']
+    ['whitespace only', '   ', 'Enter your name to place the order.'],
+    ['single dot', '.', 'Name must be at least 3 characters.'],
+    ['two letters', 'Al', 'Name must be at least 3 characters.'],
+    ['digits only', '123', 'Use letters only (spaces, . - and apostrophes are allowed).'],
+    ['letters and digit', 'A1b', 'Use letters only (spaces, . - and apostrophes are allowed).'],
+    ['three dots', '...', 'Use letters only (spaces, . - and apostrophes are allowed).'],
+    ['letter then dots', 'a..', 'Enter your real name.']
 ];
 
-for (const [input, message] of INVALID_NAMES) {
-    test(`TC6: invalid name "${input}" is blocked with a clear message`, async ({ page }) => {
+for (const [label,input, message] of INVALID_NAMES) {
+    test(`TC6: invalid name "${label}" is blocked with a clear message`, async ({ page }) => {
         await page.getByTestId('add-notebook').click();
         await page.getByLabel('Full name (required)').fill(input);
         await page.getByRole('button', { name: 'Place order' }).click();
