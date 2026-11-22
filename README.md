@@ -2,7 +2,7 @@
 
 A small checkout page (plain HTML, CSS and JavaScript, no backend) plus Playwright browser tests.
 
-**Demo:** comming soon 
+**Demo:** https://maitry-gala.github.io/mini-checkout-test-suite
 
 ## What it does
 - Two products: Notebook (₹50) and Pen set (₹299). Add items, change the quantity (1 to 10), step with + and −, or remove a line.
