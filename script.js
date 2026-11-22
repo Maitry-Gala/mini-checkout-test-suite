@@ -180,6 +180,14 @@ getid('cart-body').addEventListener('focusout', (e) => {
     }
 });
 
+// Pressing Enter in a quantity box confirms the number instead of placing the order.
+getid('cart-body').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.target.matches('[data-id]')) {
+        e.preventDefault();
+        e.target.blur();
+    }
+});
+
 // Typing in the name field clears its error and its invalid styling.
 getid('name').addEventListener('input', () => {
     getid('name-error').textContent = '';

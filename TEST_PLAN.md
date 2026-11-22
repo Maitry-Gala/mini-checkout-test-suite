@@ -81,65 +81,49 @@ Browser and version: Chrome 157   OS: Windows   Date: 21-11-2026
 - Expected: Row disappears, total decreases correctly, and "Your cart is empty." appears after the last item is removed.
 - Actual: As Expected   Result: [pass]   Evidence: `evidence/mt5.png`
 
-**MT6: Name whitespace handling\*\***
+**MT6: Name whitespace handling**
 - Steps: Add an item. Type `  Maitry    Gala  ` as the name and click Place order.
-- Expected: Confirmation displays the trimmed name as `Asha Patel`, with extra spaces removed.
-- Actual: As Expected   Result: [ ]   Evidence: [ ]
+- Expected: Confirmation displays the trimmed name as `Maitry Gala`, with extra spaces removed.
+- Actual: As Expected   Result: [pass]   Evidence: `evidence/mt6.png`
 
-**MT7: Enter key inside quantity field\*\***
+
+**MT7: Enter key inside quantity field**
 - Steps: Add an item, enter a valid name, click into a quantity box and press Enter.
-- Expected: Order is not placed; the quantity box retains a valid quantity.
-- Actual: [ ]   Result: [ ]   Evidence: `evidence/mt7.png`
+- Expected: Order is not placed; the box returns to the last valid quantity.
+- Actual: As Expected   Result:  (after fix for D3 - pass)   Evidence: `evidence/m7.png`
 
-**MT8: Maximum quantity validation\*\***
+**MT8: Maximum quantity validation**
 - Steps: Add an item and type `75` in its quantity box.
 - Expected: Quantity is capped at 10, total matches 10, and the message "Maximum quantity is 10 per item. Quantity set to 10." appears and disappears after clicking elsewhere.
-- Actual: [ ]   Result: [ ]   Evidence: `evidence/mt8.png`
+- Actual: As Expected   Result: [pass]   Evidence: `evidence/mt8.png`
 
-**MT9: Maximum name length\*\***
+**MT9: Maximum name length**
 - Steps: Try typing a name longer than 30 characters in the Full name field.
 - Expected: Typing stops at 30 characters; no additional characters are accepted.
-- Actual: [ ]   Result: [ ]   Evidence: [ ]
+- Actual: As Expected   Result: [pass]   Evidence: `evidence/mt9.png`
 
-**MT10: Mobile responsiveness\*\***
+**MT10: Mobile responsiveness**
 - Steps: Resize the browser window to phone width and navigate through the cart and checkout sections.
 - Expected: Layout remains usable; all controls and content are visible without horizontal scrolling.
-- Actual: [ ]   Result: [ ]   Evidence: [ ]
+- Actual: As Expected   Result: [pass]   Evidence: `evidence/mt10.png`
 
-**MT11: Browser Back and reload\*\***
+**MT11: Browser Back and reload**
 - Steps: Add an item, enter a valid name and place an order. After confirmation, press the browser Back button, then return to the checkout page.
 - Expected: Back navigation leaves the page; reloading displays an empty cart, as described in Known Limitations.
-- Actual: [ ]   Result: [ ]   Evidence: [ ]
+- Actual: As Expected   Result: [pass]   Evidence: `evidence/mt11.png`
 
-### Additional manual tests
-| ID | Steps | Expected | Actual | Result | Evidence |
-|----|-------|----------|--------|--------|----------|
-| MT3 | Add both items. Type `0`, `-1`, `1.5`, then blank in a quantity box, clicking away each time | Box returns to the last valid quantity; no `NaN` or negative in any total | [as Expected ] | [pass] | evidence/mt3.png |
-| MT4 | Add an item. Use only Tab, Enter and Space to press +, −, Remove and Place order | Every control reachable and working; note where focus goes after Remove | [ ] | [ ] | |
-| MT5 | Remove each line with the mouse; press − at quantity 1 | Row disappears, total drops, "Your cart is empty." returns after the last line | [ ] | [ ] | |
-| MT6 | Type `  Asha    Patel  ` as the name and place an order | Confirmation shows `Asha Patel` | [ ] | [ ] | |
-| MT7 | Add an item, enter a valid name, click into a quantity box and press Enter | Order is not placed; the box keeps a valid quantity | [ ] | [ ] | evidence/mt7.png |
-| MT8 | Type `75` in a quantity box | Box shows 10, total matches 10, message "Maximum quantity is 10 per item. Quantity set to 10."; message disappears after clicking elsewhere | [ ] | [ ] | evidence/mt8.png |
-| MT9 | Try to type a name longer than 30 characters | Typing stops at 30 | [ ] | [ ] | |
-| MT10 | Make the browser window phone-width | Usable; no sideways scrolling | [ ] | [ ] | |
-| MT11 | After an order is confirmed, press the browser Back button, then return | Back leaves the page; reloading gives an empty cart (see Known limitations) | [ ] | [ ] | |
 
 ## 5. Mutation checks (do the tests catch faults?)
 Method for each: change one line in `script.js`, run the command, compare with the expected failures, then revert with `git checkout -- script.js` and confirm `npm test` is green again.
 
 | # | Change (file, line) | Predicted | Actual failures | Evidence |
 |---|---------------------|-----------|-----------------|----------|
-| M1 | PRODUCTS: Notebook price `50` → `100` | [your prediction] | TC1, TC3, TC6, TC8 | evidence/m1-failure.png |
-| M2 | Submit handler: `if (placed) return;` → `// if (placed) return;` | [your prediction] | TC4 | evidence/m2-failure.png |
-| M3 | Submit handler: `getid('name-error').textContent = nameProblem;` → `getid('name-error').textContent = name ? '' : 'Enter your name to place the order.';` | [your prediction] | TC6 | evidence/m3-failure.png |
-| M4 | Add branch: `cart[id] = Math.min(MAX_QTY, (cart[id] \|\| 0) + 1);` → `cart[id] = (cart[id] \|\| 0) + 1;` | [your prediction] | TC8 | evidence/m4-failure.png |
+| M1 | PRODUCTS: Notebook price `50` → `100` | As price is hardcoded in test cases it fails which TC uses it  | TC1, TC3, TC6, TC8 | evidence/m1-failure.png |
+| M2 | Submit handler: `if (placed) return;` → `// if (placed) return;` |It will be able to create multiple confirmation on same order  | TC4 | evidence/m2-failure.png |
+| M3 | Submit handler: `getid('name-error').textContent = nameProblem;` → `getid('name-error').textContent = name ? '' : 'Enter your name to place the order.';` | Any name is allowed without any checks | TC6 | evidence/m3-failure.png |
+| M4 | Add branch: `cart[id] = Math.min(MAX_QTY, (cart[id] \|\| 0) + 1);` → `cart[id] = (cart[id] \|\| 0) + 1;` | Qty can be added as much wanted no check on qty which can lead to qty be a 0/negative/bigger number | TC8 | evidence/m4-failure.png |
 
 Commands: M1 `npx playwright test`; M2 `npx playwright test -g "TC4"`; M3 `npx playwright test -g "TC6"`; M4 `npx playwright test -g "TC8"`.
-
-Notes
-- In M1, TC6 and TC8 failed as a side effect of hard-coded ₹50 and ₹500. TC1 and TC3 are the real price checks.
-- [If M4 passed everything before TC8 existed, say so: the cap was untested until TC8 was added.]
-- Observed Expected/Received lines: [paste one per mutation].
 
 ## 6. Defect log
 **D1: No message for most invalid names**
@@ -156,18 +140,17 @@ Notes
 - Expected: the quantity is capped at 10 and the customer is told why.
 - Actual: the box returned to `7` (typing `12` returned `1`) with no message, because the cart kept the last valid keystroke.
 - How found: manual testing.
-- Evidence: [evidence/d2-before.png]
+- Evidence: [evidence/d2-before1.png,/d2-before2.png]
 - Status: fixed. A larger number now snaps to 10 with the message "Maximum quantity is 10 per item. Quantity set to 10." Covered by TC10 and MT8.
 
 **D3: Enter in a quantity box placed the order**
 - Steps: add an item, enter a valid name, click into a quantity box, clear it and press Enter.
 - Expected: the quantity is confirmed and no order is placed.
 - Actual: the form submitted and the order was confirmed with the old quantity.
+- Cause: Enter inside any field of a form submits it, and the quantity boxes sit inside the checkout form.
 - How found: manual testing (MT7).
-- Evidence: [evidence/d3-before.png]
-- Status: [fixed: Enter in a quantity box now only confirms the number / not fixed: accepted as a limitation. Fill in what you did, and re-run MT7 to confirm.]
-
-[Add any other defect found in the manual tests in the same format. If none, leave as is.]
+- Evidence: `evidence/d3.png`,
+- Status: fixed. Enter in a quantity box now confirms the number and leaves the order unplaced; verified manually in MT7. Not covered by an automated test.
 
 ## 7. Known limitations
 - No way to start a second order without reloading (out of scope).
