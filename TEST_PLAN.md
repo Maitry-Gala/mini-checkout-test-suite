@@ -40,7 +40,7 @@ Tool: Playwright (Chromium). Run: `npm test`. Each test starts in a fresh browse
 | TC10 | Typed quantities | `0`, `1.5`, `-3` and blank return to the last valid quantity with the total unchanged; `75` snaps to 10, shows "Maximum quantity is 10 per item. Quantity set to 10.", total ₹500 |
 
 TC6 and TC7 run once per input, so `npm test` reports 17 test runs from these 10 test cases.
-Result of the last run: [17 passed] on 21-11-26, Node 1.65.1 , Playwright 1.65.1.
+Result of the last run: [17 passed] on 21-11-26, Node v22.16.0 , Playwright 1.65.1.
 
 **Not automated (lower risk, covered manually):** Remove button, trimming and collapsing spaces in the name, quantity message clearing when the box loses focus, Enter key in a quantity box, keyboard focus, narrow screen layout, browser Back.
 
@@ -58,59 +58,59 @@ Browser and version: Chrome 157   OS: Windows   Date: 21-11-2026
 **MT1: Empty cart**
 - Steps: reload; type `Maitry Gala` in Full name; click Place order.
 - Expected: "Your cart is empty. Add at least one item to place an order."; no confirmation; `Maitry Gala` still in the field; total ₹0.
-- Actual: [same as expected]   Result: [pass]   Evidence: `evidence/mt1.png`
+- Actual: same as expected   Result: pass   Evidence: `evidence/mt1.png`
 
 **MT2: Rapid double-click on Place order**
 - Steps: reload; click Add Notebook; type `Maitry Gala`; double-click Place order as fast as you can. Repeat 5 times, reloading each time. Then do 3 runs pressing Enter twice quickly in the name field.
 - Expected: exactly one "Order confirmed" section and one reference each time.
 - Actual: as Expected
-- Result: [pass]   Evidence: `evidence/mt2.png` 
+- Result: pass   Evidence: `evidence/mt2.png` 
 
 **MT3: Invalid quantity inputs**
 - Steps: Add both items. Type `0`, `-1`, `1.5`, then blank in a quantity box, clicking away each time.
 - Expected: Box returns to the last valid quantity; no `NaN` or negative values in any total.
-- Actual: Tested with 1.5 it falls back to 1 Result: [pass]   Evidence: `evidence/mt3.png`
+- Actual: Tested with 1.5 it falls back to 1 Result: pass   Evidence: `evidence/mt3.png`
 
 **MT4: Keyboard-only navigation**
 - Steps: Add an item. Use only Tab, Enter and Space to press +, −, Remove and Place order.
 - Expected: Every control is reachable and working using the keyboard; focus moves appropriately after removing an item.
-- Actual: as Expected   Result: [pass]   Evidence: `evidence/mt4.png`
+- Actual: as Expected   Result: pass   Evidence: `evidence/mt4.png`
 
 **MT5: Remove items and decrease quantity**
 - Steps: Add both items. Remove each line using the Remove button; alternatively, press − when an item's quantity is 1.
 - Expected: Row disappears, total decreases correctly, and "Your cart is empty." appears after the last item is removed.
-- Actual: As Expected   Result: [pass]   Evidence: `evidence/mt5.png`
+- Actual: As Expected   Result: pass   Evidence: `evidence/mt5.png`
 
 **MT6: Name whitespace handling**
 - Steps: Add an item. Type `  Maitry    Gala  ` as the name and click Place order.
 - Expected: Confirmation displays the trimmed name as `Maitry Gala`, with extra spaces removed.
-- Actual: As Expected   Result: [pass]   Evidence: `evidence/mt6.png`
+- Actual: As Expected   Result: pass   Evidence: `evidence/mt6.png`
 
 
 **MT7: Enter key inside quantity field**
 - Steps: Add an item, enter a valid name, click into a quantity box and press Enter.
 - Expected: Order is not placed; the box returns to the last valid quantity.
-- Actual: As Expected   Result:  (after fix for D3 - pass)   Evidence: `evidence/m7.png`
+- Actual: As Expected   Result:  (after fix for D3 - pass)   Evidence: `evidence/mt7.png`
 
 **MT8: Maximum quantity validation**
 - Steps: Add an item and type `75` in its quantity box.
 - Expected: Quantity is capped at 10, total matches 10, and the message "Maximum quantity is 10 per item. Quantity set to 10." appears and disappears after clicking elsewhere.
-- Actual: As Expected   Result: [pass]   Evidence: `evidence/mt8.png`
+- Actual: As Expected   Result: pass   Evidence: `evidence/mt8.png`
 
 **MT9: Maximum name length**
 - Steps: Try typing a name longer than 30 characters in the Full name field.
 - Expected: Typing stops at 30 characters; no additional characters are accepted.
-- Actual: As Expected   Result: [pass]   Evidence: `evidence/mt9.png`
+- Actual: As Expected   Result: pass   Evidence: `evidence/mt9.png`
 
 **MT10: Mobile responsiveness**
 - Steps: Resize the browser window to phone width and navigate through the cart and checkout sections.
 - Expected: Layout remains usable; all controls and content are visible without horizontal scrolling.
-- Actual: As Expected   Result: [pass]   Evidence: `evidence/mt10.png`
+- Actual: As Expected   Result: pass   Evidence: `evidence/mt10.png`
 
 **MT11: Browser Back and reload**
 - Steps: Add an item, enter a valid name and place an order. After confirmation, press the browser Back button, then return to the checkout page.
 - Expected: Back navigation leaves the page; reloading displays an empty cart, as described in Known Limitations.
-- Actual: As Expected   Result: [pass]   Evidence: `evidence/mt11.png`
+- Actual: As Expected   Result: pass   Evidence: `evidence/mt11.png`
 
 
 ## 5. Mutation checks (do the tests catch faults?)
